@@ -41,11 +41,26 @@ const getProduct = async (req, res) => {
 	res.status(200).json(singleProduct);
 };
 // UPDATE
+const updateProduct = async (req, res) => {
+	const { id } = req.params;
 
+	if (!mongoose.Types.ObjectId.isValid(id)) {
+		return res.status(404).json({ error: 'Product ID is not valid' });
+	}
+
+	const updatedProduct = await Product.findByIdAndUpdate(id, { ...req.body });
+
+	if (!updatedProduct) {
+		return res.status(500).json({ error: 'Unable to update product' });
+	}
+
+	res.status(200).json(updatedProduct);
+};
 // DELETE
 
 module.exports = {
 	createProduct,
 	getProducts,
 	getProduct,
+	updateProduct,
 };
